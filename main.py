@@ -1,5 +1,7 @@
+from tkinter import *
 import tkinter as tk
 import customtkinter
+import time
 import threading
 import random
 
@@ -16,24 +18,51 @@ class SpeedType:
 
         self.texts = open("text.txt", "r").read().split("\n")
 
-        self.sample = customtkinter.CTkLabel(self.root, text= random.choice(self.texts))
-        self.sample.grid(row=0 , column=0, column_span = 800)
+        self.frame = customtkinter.CTkFrame(self.root)
+
+        self.sample = customtkinter.CTkLabel(self.frame, text= random.choice(self.texts),font=customtkinter.CTkFont(size=20))
+        self.sample.grid(row=0 , column=0, columnspan = 500, padx=10,pady=20)
+
+        self.entry  = customtkinter.CTkEntry(self.frame, width=500, height=50,font=customtkinter.CTkFont(size=24))
+        self.entry.grid(row=1 , column=0, columnspan =500, padx=10,pady=20)
+        self.entry.bind("<KeyPress>", self.start)
         
-        button_1 = customtkinter.CTkButton(master= self.root, width= 50, height= 50, corner_radius= 8, border_width= 2)
-        button_1.grid(row = 1, column=0)
-        button_2 = customtkinter.CTkButton(master= self.root, width= 50, height= 50, corner_radius= 8, border_width= 2)
-        button_2.grid(row = 2, column=0)
-        button_3 = customtkinter.CTkButton(master= self.root, width= 50, height= 50, corner_radius= 8, border_width= 2)
-        button_3.grid(row = 3, column=0)
+        self.speed = customtkinter.CTkLabel(self.frame, text="Speed: \n 0.00 CPS \n 0.00 CPM",font=customtkinter.CTkFont(size=12))
+        self.speed.grid(row=2 , column=0, columnspan = 20, padx=10,pady=20)
 
+        self.reset = customtkinter.CTkButton(self.frame, text= "Reset" , command= self.reset1)
+        self.reset.grid(row=3 , column=0, columnspan = 5, padx=10,pady=20)
+        
+        self.frame.pack(expand=True)
 
-        button_1 = customtkinter.CTkButton(master= self.root, width= 50, height= 50, corner_radius= 8, border_width= 2)
-        button_1.grid(row = 1, column=1)
-        button_2 = customtkinter.CTkButton(master= self.root, width= 50, height= 50, corner_radius= 8, border_width= 2)
-        button_2.grid(row = 2, column=1)
-        button_3 = customtkinter.CTkButton(master= self.root, width= 50, height= 50, corner_radius= 8, border_width= 2)
-        button_3.grid(row = 3, column=1)
+        self.counter = 0
+        self.started = False
 
         self.root.mainloop()
+
+   def start(self, event):
+        if not self.started:
+             if not event.keycode in [16,17,18]:
+                  self.started = True
+                  t = threading.Thread(target=self.time_thread)
+                  t.start()
+        if not self.sample.cget('text').startswith(self.entry.get()):
+             self.entry.configure(fg="red") 
+        else:
+             self.entry.configure(fg="black")
+        if self.entry.get() == self.sample.cget('text')[:-1]:
+             self.started = False
+             self.entry.configure(fg="blue")
+   
+   def time_thread(self):
+        while self.started:
+             time.sleep(0.1)
+             self.counter += 0.1
+             cps = len(self.entry.get()) / self.counter
+             cpm = cps * 60
+             self.speed.configure(text= f"Speed: \n{cps:.2f} CPS\n{cpm:.2f} CPM")
+
+   def reset1(self):
+        pass
 
 SpeedType()
