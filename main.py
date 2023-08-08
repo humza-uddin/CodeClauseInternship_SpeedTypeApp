@@ -24,14 +24,14 @@ class SpeedType:
         self.sample.grid(row=0 , column=0, columnspan = 500, padx=10,pady=20)
 
         self.entry  = customtkinter.CTkEntry(self.frame, width=500, height=50,font=customtkinter.CTkFont(size=24))
-        self.entry.grid(row=1 , column=0, columnspan =500, padx=10,pady=20)
+        self.entry.grid(row=1 , column=0, columnspan = 500, padx=10,pady=20)
         self.entry.bind("<KeyPress>", self.start)
         
         self.speed = customtkinter.CTkLabel(self.frame, text="Speed: \n 0.00 CPS \n 0.00 CPM",font=customtkinter.CTkFont(size=12))
-        self.speed.grid(row=2 , column=0, columnspan = 20, padx=10,pady=20)
+        self.speed.grid(row=2 , column=0, columnspan = 50, padx=250,pady=20)
 
         self.reset = customtkinter.CTkButton(self.frame, text= "Reset" , command= self.reset1)
-        self.reset.grid(row=3 , column=0, columnspan = 5, padx=10,pady=20)
+        self.reset.grid(row=3 , column=0, columnspan = 5, padx=250,pady=20)
         
         self.frame.pack(expand=True)
 
